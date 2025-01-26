@@ -15,35 +15,95 @@ This exercise will demonstrate the following in the example video:
  - Check the value of a variable and have it do something
 */
 
+VAR jersey = 0
+VAR time = 25
+VAR shoes = ""
+VAR toilet = 0  
 
+You have a basketball game and you have {time} minutes to get ready for the court.
++ [go to the hallway] -> hallway
 
--> cave_mouth
+=== hallway ===
+You're standing in the hallway.
++ [go to the locker room] -> locker_room
++ [go to the physio room] -> physio_room
++ [check the time]
+    {time >0: You have {time} minute{time > 1:s}}
+    {time <=0: YOU ARE LATE!!!}
+    -> hallway
++ {jersey == 1 && shoes != "" } [GO TO THE GAME COURT] -> game_court
 
-== cave_mouth ==
-You are at the enterance to a cave. {not torch_pickup:There is a torch on the floor.} The cave extends to the east and west.
-
-
-
-+ [Take the east tunnel] -> east_tunnel
-+ [Take the west tunnel] -> west_tunnel
-* [Pick up the torch] -> torch_pickup
-
-== east_tunnel ==
-You are in the east tunnel. It is very dark, you can't see anything.
-* {torch_pickup} [Light Torch] -> east_tunnel_lit
-+ [Go Back] -> cave_mouth
+=== locker_room ===
+You're in the locker room. 
+{jersey == 1: You are wearing jersey with No.15.}
+{shoes != "" : You have your {shoes} shoes on}{shoes == "Nike": (nice choice).}{shoes == "Adidas": (comfortable choice).}{shoes == "UA": (are you sure?).} 
+* [change into your jersey (-7min)] -> jersey_on
++ [choose your shoes (-8min)] -> shoes_selection
+* [use the restroom (-??min)] -> restroom
++ [check the time]
+     {time >0: You have {time} minute{time > 1:s}}
+    {time <=0: YOU ARE LATE!!!}
+    -> locker_room
++ [go back to the hallway] -> hallway
 -> END
 
-== west_tunnel ==
-You are in the west
-+ [Go Back] -> cave_mouth
+=== physio_room ===
+You're in the physio room. 
+* [get taped up your ankles (-2min)] -> taped_up
+* [go for a massage (-15min)] -> massage 
++ [check the time]
+     {time >0: You have {time} minute{time > 1:s}}
+    {time <=0: YOU ARE LATE!!!}
+    -> physio_room
++ [go back to the hallway] -> hallway
 -> END
 
-=== torch_pickup ===
-You now have a torch. May it light the way.
-* [Go Back] -> cave_mouth
+=== game_court ===
+{time > 0:WOOHOO, YOU MADE IT TO THE COURT ON TIME! LET'S CRUSH THEM OUT THERE}
+{time <= 0:The couch is mad at you for being late, so today you'll just be sitting on the bench.}
 -> END
 
-== east_tunnel_lit ==
-The light of your torch glints off of the thousands of coins in the room.
+=== jersey_on ===
+~ jersey = 1
+~ time = time -7 
+Great, you are ready for the game!
+-> locker_room
 -> END
+
+=== restroom ===
+~ toilet = RANDOM(5,15) 
+~ time = time - toilet
+A few pounds lighter.
+-> locker_room
+-> END
+
+=== taped_up ===
+~ time = time -2
+You're so young, but your ankles are living in their retirement years.
+-> physio_room
+-> END
+
+=== massage ===
+~ time = time -15
+You're living your best life, but a massage right before the game? Really?
+-> physio_room
+-> END
+
+=== shoes_selection ===
+~ time = time -8
+Choose your shoes
++ [Nike]
+~ shoes = "Nike" 
+-> locker_room
++ [Adidas]
+~ shoes = "Adidas" 
+-> locker_room
++ [UA]
+~ shoes = "UA" 
+-> locker_room
+-> END
+
+
+
+
+
